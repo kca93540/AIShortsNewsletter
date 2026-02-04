@@ -1,0 +1,14 @@
+{
+  "manifest_version": 3,
+  "name": "AICards",
+  "version": "0.1.0",
+  "description": "Sticky-note AI flashcards for everyday learning.",
+  "action": {
+    "default_title": "AICards"
+  },
+  "chrome_url_overrides": {
+    "newtab": "index.html"
+  },
+  "permissions": ["storage"],
+  "host_permissions": ["http://localhost:4000/*"]
+}

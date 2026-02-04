@@ -1,0 +1,60 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum Level {
+  BEGINNER
+  INTERMEDIATE
+}
+
+enum ScheduleType {
+  MWF
+  DAILY
+}
+
+model User {
+  id        String   @id
+  createdAt DateTime @default(now())
+  states    UserCardState[]
+}
+
+model Card {
+  id           String   @id @default(cuid())
+  slug         String   @unique
+  title        String
+  level        Level
+  concept      String
+  whyItMatters String
+  example      String
+  actionStep   String
+  tags         Json
+  createdAt    DateTime @default(now())
+  sourceUrl    String?
+  states       UserCardState[]
+}
+
+model Rotation {
+  id            String       @id @default(cuid())
+  activeCardId  String
+  schedule      ScheduleType
+  lastRotatedAt DateTime
+  activeCard    Card         @relation(fields: [activeCardId], references: [id])
+}
+
+model UserCardState {
+  id         String   @id @default(cuid())
+  userId     String
+  cardId     String
+  saved      Boolean  @default(false)
+  understood Boolean  @default(false)
+  lastSeenAt DateTime?
+  user       User     @relation(fields: [userId], references: [id])
+  card       Card     @relation(fields: [cardId], references: [id])
+
+  @@unique([userId, cardId])
+}
